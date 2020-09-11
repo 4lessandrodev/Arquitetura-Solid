@@ -117,30 +117,23 @@ describe('SignUp Controller', () => {
   })
 
   test('Deve retornar 500 se o EmailValidador der erro', async () => {
-    try {
-      class EmailValidator implements IEmailValidator {
-        isValid (email: string): boolean {
-          throw new Error()
-        }
-      }
-      const emailValidator = new EmailValidator()
-      const sut = new SignUpController(emailValidator)
-      const httpRequest = {
-        body: {
-          name: 'any_name',
-          email: 'invalid_email@mail.com',
-          password: 'any_password',
-          passwordConfirmation: 'any_password'
-        }
-      }
-      const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse.statusCode).toBe(500)
-      expect(httpResponse.body).toEqual(new ServerError())
-    } catch (error) {
-      return {
-        statusCode: 500,
-        body: new ServerError()
+    class EmailValidator implements IEmailValidator {
+      isValid (email: string): boolean {
+        throw new Error()
       }
     }
+    const emailValidator = new EmailValidator()
+    const sut = new SignUpController(emailValidator)
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'invalid_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 })
