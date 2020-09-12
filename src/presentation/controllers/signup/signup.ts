@@ -11,7 +11,7 @@ export class SignUpController implements IController {
     this.addAccount = addAccount
   }
 
-  async handle (httpRequest: IHttpRequest): Promise<IHttpResponse | any> {
+  async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       const requiredFields = ['email', 'name', 'password', 'passwordConfirmation']
       for (const field of requiredFields) {
