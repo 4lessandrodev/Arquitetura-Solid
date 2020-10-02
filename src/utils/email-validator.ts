@@ -1,8 +1,8 @@
 import { IEmailValidator } from '../presentation/protocols/email-validator';
-import isEmail from 'validator/lib/isEmail';
+import validator from 'validator';
 
 export class EmailValidatorAdapter implements IEmailValidator {
   isValid (email: string): boolean {
-    return isEmail(email);
+    return validator.isEmail(email);
   }
 }
