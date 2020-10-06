@@ -2,7 +2,12 @@ import { IController, IHttpRequest, IHttpResponse } from '../../../presentation/
 import { LogControllerDecorator } from './log';
 
 describe('LogController', () => {
-  test('Deve chamar o controller handle', async () => {
+  interface sutTypes {
+    sut: LogControllerDecorator
+    controllerStub: IController
+  }
+
+  const makeController = (): IController => {
     class ControllerStub implements IController {
       async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
         const httpResponse: IHttpResponse = {
@@ -12,9 +17,18 @@ describe('LogController', () => {
         return await new Promise((resolve) => resolve(httpResponse));
       }
     }
-    const controllerStub = new ControllerStub();
-    const handleSpy = jest.spyOn(controllerStub, 'handle');
+    return new ControllerStub();
+  };
+
+  const makeSut = (): sutTypes => {
+    const controllerStub = makeController();
     const sut = new LogControllerDecorator(controllerStub);
+    return { sut, controllerStub };
+  };
+
+  test('Deve chamar o controller handle', async () => {
+    const { controllerStub, sut } = makeSut();
+    const handleSpy = jest.spyOn(controllerStub, 'handle');
     const httpRequest = {
       body: {
         email: 'any_mail@mail.com',
