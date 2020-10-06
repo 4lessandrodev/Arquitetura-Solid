@@ -1,8 +1,16 @@
 import { Collection, MongoClient } from 'mongodb';
+interface IMongoHelper {
+  client: MongoClient | null
+  url: string | null
+  connect: (url: string) => Promise<void>
+  disconnect: () => Promise<void>
+  getCollection: (name: string) => Promise<Collection | undefined>
+  map: (collection: any) => any
+}
 
-export const MongoHelper = {
-  client: null as unknown as MongoClient,
-  url: null as unknown as string,
+export const MongoHelper: IMongoHelper = {
+  client: null,
+  url: null,
   async connect (URL: string): Promise<void> {
     this.client = await MongoClient.connect(URL, {
       useNewUrlParser: true,
@@ -11,15 +19,15 @@ export const MongoHelper = {
     this.url = URL;
   },
   async disconnect (): Promise<void> {
-    await this.client.close();
-    // this.client = null;
+    await this.client?.close();
+    this.client = null;
   },
 
-  async getCollection (name: string): Promise<Collection> {
+  async getCollection (name: string): Promise<Collection | undefined> {
     if (!this.client?.isConnected()) {
-      await this.connect(this.url);
+      await this.connect(this.url ?? '');
     }
-    return this.client.db().collection(name);
+    return this.client?.db().collection(name);
   },
 
   map: (collection: any): any => {

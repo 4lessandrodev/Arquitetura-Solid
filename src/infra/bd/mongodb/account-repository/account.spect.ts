@@ -17,7 +17,7 @@ describe('Account mongodb', () => {
 
   beforeEach(async () => {
     const accountCollection = await MongoHelper.getCollection('accounts');
-    await accountCollection.deleteMany({});
+    await accountCollection?.deleteMany({});
   });
 
   test('Retornar uma nova conta ao ter sucesso ', async () => {
