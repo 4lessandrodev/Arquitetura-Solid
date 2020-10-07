@@ -6,6 +6,8 @@ const URL = process.env.MONGO_URL ?? 'localhost:27017';
 describe('Log Mongo', () => {
   let errorCollection: Collection | undefined;
 
+  const makeSut = (): LogMongoRepository => new LogMongoRepository();
+
   beforeAll(async () => {
     await MongoHelper.connect(URL);
   });
@@ -20,7 +22,7 @@ describe('Log Mongo', () => {
   });
 
   test('Deve criar um log de erro se obter sucesso ', async () => {
-    const sut = new LogMongoRepository();
+    const sut = makeSut();
     await sut.logError('any_arror');
     const countErrorLog = await errorCollection?.countDocuments();
     expect(countErrorLog).toBe(1);
