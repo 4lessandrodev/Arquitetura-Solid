@@ -3,8 +3,19 @@ import { badRequest } from '../../helpers/http-helper';
 import { LoginController } from './login';
 
 describe('Login Controller', () => {
-  test('Deve retornar 400 se email não for informado', async () => {
+  interface sutTypes {
+    sut: LoginController
+  }
+
+  const makeSut = (): sutTypes => {
     const sut = new LoginController();
+    return {
+      sut
+    };
+  };
+
+  test('Deve retornar 400 se email não for informado', async () => {
+    const { sut } = makeSut();
     const httpRequest = {
       body: {
         password: 'any_password'
@@ -15,7 +26,7 @@ describe('Login Controller', () => {
   });
 
   test('Deve retornar 400 se a senha não for informada', async () => {
-    const sut = new LoginController();
+    const { sut } = makeSut();
     const httpRequest = {
       body: {
         email: 'any_email@mail.com'
